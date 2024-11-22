@@ -1,0 +1,5 @@
+{{define "content"}}
+<h1>Diff <a href="/r/{{.A.ID}}">#{{.A.ID}}</a> → <a href="/r/{{.B.ID}}">#{{.B.ID}}</a></h1>
+<p class="muted">{{if .Changed}}{{.Changed}} changed lines{{else}}identical requests{{end}}</p>
+<div class="diff">{{range .Lines}}<div class="{{opClass .Op}}">{{opSign .Op}} {{.Text}}</div>{{end}}</div>
+{{end}}

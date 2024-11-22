@@ -1,0 +1,24 @@
+{{define "content"}}
+{{$r := .R}}
+<h1><code>{{$r.Method}} {{$r.Path}}{{if $r.Query}}?{{$r.Query}}{{end}}</code></h1>
+<p class="muted">#{{$r.ID}} on <a href="/c/{{$r.Channel}}">{{$r.Channel}}</a> · {{ts $r.ReceivedAt}} · from {{$r.RemoteAddr}}
+{{if $r.ReplayOf}} · replay of <a href="/r/{{$r.ReplayOf}}">#{{$r.ReplayOf}}</a>{{end}}</p>
+<form method="post" action="/r/{{$r.ID}}/replay">
+<button type="submit" {{if not .Connected}}title="no client connected: the replay will only be stored"{{end}}>Replay</button>
+</form>
+<div class="grid">
+<section>
+<h2>Request</h2>
+<table>{{range $k := sortedKeys $r.Headers}}{{range index $r.Headers $k}}<tr><th>{{$k}}</th><td><code>{{.}}</code></td></tr>{{end}}{{end}}</table>
+<h2>Body {{if $r.BodyTruncated}}<span class="warn">(truncated)</span>{{end}}</h2>
+<pre>{{body $r.Body}}</pre>
+</section>
+<section>
+<h2>Response <span class="{{statusClass $r.RespStatus}}">{{if $r.RespStatus}}{{$r.RespStatus}}{{end}}</span> <span class="muted">{{if $r.Duration}}{{$r.Duration}}{{end}}</span></h2>
+{{if $r.RespError}}<p class="err">{{$r.RespError}}</p>{{end}}
+<table>{{range $k := sortedKeys $r.RespHeaders}}{{range index $r.RespHeaders $k}}<tr><th>{{$k}}</th><td><code>{{.}}</code></td></tr>{{end}}{{end}}</table>
+<h2>Body</h2>
+<pre>{{body $r.RespBody}}</pre>
+</section>
+</div>
+{{end}}

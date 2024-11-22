@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Channels</h1>
+{{if .Channels}}
+<div class="overflow"><table>
+<tr><th>channel</th><th>requests</th><th>last request</th><th>client</th></tr>
+{{range .Channels}}
+<tr><td><a href="/c/{{.Name}}">{{.Name}}</a></td><td>{{.Count}}</td><td>{{ago .LastSeen}}</td>
+<td>{{if .Connected}}<span class="badge on">connected</span>{{else}}<span class="badge off">offline</span>{{end}}</td></tr>
+{{end}}
+</table></div>
+{{else}}
+<p class="muted">No webhooks received yet. Point a webhook at <code>https://{{.Host}}/h/&lt;channel&gt;</code>
+and run <code>relay -channel &lt;channel&gt; -to http://localhost:3000</code>.</p>
+{{end}}
+{{end}}

@@ -1,0 +1,22 @@
+{{define "content"}}
+<h1>{{.Channel}} {{if .Connected}}<span class="badge on">client connected</span>{{else}}<span class="badge off">no client</span>{{end}}</h1>
+<p class="muted">Webhook URL: <code>https://{{.Host}}/h/{{.Channel}}</code></p>
+<form method="get" action="/diff">
+<div class="overflow"><table>
+<tr><th></th><th>#</th><th>received</th><th>request</th><th>response</th><th>time</th></tr>
+{{range .Requests}}
+<tr>
+<td><input type="checkbox" name="id" value="{{.ID}}" aria-label="select #{{.ID}}"></td>
+<td><a href="/r/{{.ID}}">{{.ID}}</a>{{if .ReplayOf}} <span class="muted">↻{{.ReplayOf}}</span>{{end}}</td>
+<td title="{{ts .ReceivedAt}}">{{ago .ReceivedAt}}</td>
+<td><code>{{.Method}} {{.Path}}{{if .Query}}?{{.Query}}{{end}}</code></td>
+<td class="{{statusClass .RespStatus}}">{{if .RespStatus}}{{.RespStatus}}{{else if .RespError}}{{.RespError}}{{else}}—{{end}}</td>
+<td class="muted">{{if .Duration}}{{.Duration}}{{end}}</td>
+</tr>
+{{else}}
+<tr><td colspan="6" class="muted">Nothing yet.</td></tr>
+{{end}}
+</table></div>
+<p><button type="submit">Compare two selected</button></p>
+</form>
+{{end}}
